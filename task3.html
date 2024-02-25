@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <script>
+            async function fetchData() {
+                const inputEl = document.getElementById('value')
+                let value = inputEl.value
+                if (!value) {
+                    console.log('пусто ')
+                    return
+                }
+                value = parseInt(value)
+                if (isNaN(value)) {
+                    console.log('не число')
+                    return
+                }
+                if (value < 1 || value > 10) {
+                    console.log('число вне диапазона от 1 до 10')
+                    return
+                }
+
+                const imagesEl = document.getElementById('images')
+
+                const xhr = new XMLHttpRequest()
+                xhr.open('GET', `https://jsonplaceholder.typicode.com/photos?_limit=${value}`, false)
+                xhr.send()
+                if (xhr.status != 200) {
+                    console.log( xhr.status + ': ' + xhr.statusText)
+                } else {
+                    if (xhr.responseText) {
+                        const json = JSON.parse(xhr.responseText)
+                        if (json) {
+                        json.forEach((item) => {
+                            const imgEl = document.createElement('img')
+                            imgEl.setAttribute('src', item.thumbnailUrl)
+                            imagesEl.appendChild(imgEl)
+                        })
+                    }
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div class="form">
+            <input id="value" type="text" />
+            <button onclick="fetchData()">Загрузить</button>
+        </div>
+        <div id="images" class="images"></div>
+    </body>
+    <style>
+        .form {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .images {
+            max-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+    </style>
+</html>
